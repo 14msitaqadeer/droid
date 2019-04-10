@@ -1,0 +1,20 @@
+---
+
+- name: Install apt-get updates
+  command: apt-get update
+
+- name: Install additional packages
+  apt: name={{item}} state=present
+  with_items:
+   - git
+   - vim
+   - fping
+   - openssh-server
+   - bridge-utils
+   - lsof
+   - lvm2
+   - sudo
+   - tcpdump
+
+- name: Copying interfaces file
+  template: src={{inventory_hostname}}_interfaces dest=/etc/network/interfaces

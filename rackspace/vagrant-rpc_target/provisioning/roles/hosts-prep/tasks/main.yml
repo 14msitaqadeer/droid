@@ -1,0 +1,28 @@
+
+---
+
+- name: Copy public key to host
+  copy: src=id_rsa.pub dest=/usr/share mode=0755
+
+- name: Create Directory for SSH-KEY
+  command: mkdir -p /root/.ssh
+
+- name: Insert key into authorized keys file
+  shell: chdir=/root/.ssh cat /usr/share/id_rsa.pub >> /root/.ssh/authorized_keys
+
+- name: Install apt-get updates
+  command: apt-get update
+
+- name: Install additional packages
+  apt: name={{item}} state=present
+  with_items:
+   - bridge-utils
+   - lsof
+   - lvm2
+   - openssh-server
+   - sudo
+   - tcpdump
+   - vim
+
+- name: Copying interfaces file
+  template: src={{inventory_hostname}}_interfaces dest=/etc/network/interfaces

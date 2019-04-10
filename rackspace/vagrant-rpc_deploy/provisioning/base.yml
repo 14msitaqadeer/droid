@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  user: root
+  remote_user: root
+  sudo: yes
+  roles:
+    - hosts-prep
+    - ntp-standalone

@@ -1,0 +1,77 @@
+---
+
+- name: Install apt-get updates
+  command: apt-get update
+
+- name: Install additional packages
+  apt: name={{item}} state=present
+  with_items:
+   - git
+   - vim
+   - fping
+   - bridge-utils
+   - lsof
+   - lvm2
+   - sudo
+   - tcpdump
+   - jq
+
+- name: Adding Required Repos for MAAS
+  command: add-apt-repository ppa:maas/stable -y
+
+- name: Install apt-get updates
+  command: apt-get update
+
+- name: Installing MAAS Packages
+  command: apt-get install maas maas-dns maas-dhcp libvirt-bin -y
+
+- name: Adding Required Repos for JUJU
+  shell: add-apt-repository ppa:juju/stable -y ; add-apt-repository ppa:maas-maintainers/stable -y
+
+- name: Install apt-get updates
+  command: apt-get update
+
+- name: Installing JUJU Packages
+  shell: apt-get install juju-core -y ; apt-get install juju-quickstart -y ; apt-get install juju-deployer -y ; apt-get install bzr -y
+
+- name: Copying interfaces file
+  template: src=interfaces dest=/etc/network/interfaces
+
+- name: Transfer the script
+  copy: src=createsuperuser.sh dest=/home/vagrant/ mode=0777
+
+- name: Execute the script
+  command: sh /home/vagrant/createsuperuser.sh
+
+- name: Make Directory for SSH-KEY
+  command: mkdir -p /var/lib/maas/.ssh/
+
+- name: Copy private key to host
+  copy: src=id_rsa dest=/var/lib/maas/.ssh/ mode=0777
+
+- name: Copy public key to host
+  copy: src=id_rsa.pub dest=/var/lib/maas/.ssh/ mode=0777
+
+- name: Copy Script to copy PUB key
+  copy: src=ssh_copy_id.sh dest=/home/vagrant/ mode=0777
+
+- name: Execute the script
+  command: sh /home/vagrant/ssh_copy_id.sh
+
+- name: Copy Script to create profile and import image
+  copy: src=create_profile.sh dest=/home/vagrant/ mode=0777
+
+- name: Execute the script
+  command: sh /home/vagrant/create_profile.sh
+
+- name: Copying Script to create interfaces in maas
+  template: src=create_interfaces.sh dest=/home/vagrant/ mode=0777
+
+- name: Execute the script
+  command: sh /home/vagrant/create_interfaces.sh
+
+- name: Copy Script to wait untill image is imported
+  copy: src=check_image.sh dest=/home/vagrant/ mode=0777
+
+- name: Execute the script (Import Boot Image)
+  command: sh /home/vagrant/check_image.sh
