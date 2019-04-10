@@ -10,7 +10,7 @@ git clone https://github.com/arslan-qadeer/droid.git
 
 ## Usage
 
-Please make sure that you have enough hardware resources for the VMs to spin up.
+Please make sure that you have enough hardware resources for the VMs to spin up. Prior to run infrastructure setup, please consider to download [UBUNTUSERVER.BOX](https://drive.google.com/file/d/1KrWEQ0IB-YMsqlNT4emN5LOAJ2X0vG_X/view?usp=sharing) and [RHELSERVER.BOX](https://drive.google.com/file/d/15iEFJ0z9sKpbqbKT7mBmO0QivOxzqOaX/view?usp=sharing), and copy them in the main directory (droid).
 
 ```bash
 cd droid
